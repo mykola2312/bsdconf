@@ -1,0 +1,5 @@
+➜  ~ sudo ifconfig addm re0 bridge0
+ifconfig: interface addm does not exist
+➜  ~ sudo ifconfig bridge0 addm re0
+➜  ~ sudo ifconfig bridge0 addm tap0
+

@@ -1,0 +1,23 @@
+# in /etc/unbound/forward.conf remove everything and add this
+forward-zone:
+        name: "."
+  forward-tls-upstream: yes
+  # LibreDNS (DNS-over-TLS)
+  forward-addr: 116.202.176.26@853#dot.libredns.gr
+
+# in /etc/unbound/unbound.conf you need to set CA
+server:
+  ...
+  tls-cert-bundle: /usr/local/share/certs/ca-root-nss.crt
+# and comment the anchor chud
+  #auto-trust-anchor-file: /var/unbound/root.key
+
+# restart local_unbound
+sudo service local_unbound restart
+# after that, test with dns/bind-tools dig command
+dig @127.0.0.1 fsf.org - if you getting IP, then you can proceed
+and set nameserver 127.0.0.1 in /etc/resolv.conf
+
+# disable the resolvconf skibidi by adding in /etc/resolvconf.conf
+resolvconf="NO"
+# everything else in that file you should remove (except libc one)

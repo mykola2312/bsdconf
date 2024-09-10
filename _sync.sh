@@ -12,6 +12,7 @@ dirs=(
   "/var/unbound:."
   "$HOME/bhyve:."
   "$HOME/.config/i3:i3wm"
+  "$HOME/.config/i3status:i3wm"
 )
 
 files=(
@@ -25,6 +26,7 @@ files=(
   "/etc/rc.conf:rc.conf"
   "/usr/local/etc/smb4.conf:smb4.conf"
   "/etc/sysctl.conf:sysctl.conf"
+  "/usr/local/bin/w_status:w_status"
 )
 
 # create directories

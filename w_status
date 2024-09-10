@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# replacement for i3status for my FreeBSD setup
+# I want to output
+# ue0 | wlan0 | re0 | ZFS | RAM | SWAP | temp | time
+
+interval=1
+
+output_time() {
+  date "+%d/%m/%Y %H:%M:%S"
+}
+
+output_battery() {
+  read -r bat_state<<<$(echo "$hwstat_output" | awk '$1=="State:" { print $2 }' | tail -n 1)
+  read -r bat_capacity<<<$(echo "$hwstat_output" | awk '$1=="Remaining" { print $3 }' | head -n 1)
+
+  echo "BAT: $bat_capacity% $bat_state"
+}
+
+swap_to_mb() {
+  echo $1 | awk '{ printf "%.2f\n", $1/1024; }'
+}
+
+bytes_to_mb() {
+  echo $1 | awk '{ printf "%.2f\n", $1/1024/1024; }'
+}
+
+bytes_to_gb() {
+  echo $1 | awk '{ printf "%.2f\n", $1/1024/1024/1024; }'
+}
+
+output_temp() {
+  temp=$(echo "$hwstat_output" | awk '$1=="CPU0:" { print $2 }')
+
+  echo "t: $temp"
+}
+
+output_swap() {
+  read -r swap_used <<<$(swapinfo | awk 'NR==2 { print $3 }')
+  echo "SWAP: $(swap_to_mb $swap_used) MiB"
+}
+
+output_ram() {
+  physmem=$(sysctl -n hw.physmem)
+  usermem=$(sysctl -n hw.usermem)
+
+  echo "RAM: $(bytes_to_gb $usermem)/$(bytes_to_gb $physmem) GiB"
+}
+
+output_zfs() {
+  read -r zfs_name zfs_size zfs_free<<<$(zpool list | awk 'NR==2 { print $1,$2,$4 }')
+  echo "$zfs_name: $zfs_free free"
+}
+
+output_eth() {
+  if_output=$(ifconfig $1)
+  if [ $? -eq 0 ]; then 
+    read -r eth_ip<<<$(echo "$if_output" | awk '$1=="inet" { print $2  }')
+    #read -r eth_type<<<$(echo "$if_output" | awk '$1=="media:" { print $2  }')
+    read -r eth_media<<<$(echo "$if_output" | awk '$1=="media:" { print $4 }' | sed s/\(//)
+
+    echo "$1: $eth_ip $eth_media"
+  else
+    echo "$1: offline"
+  fi
+}
+
+output_wlan() {
+  if_output=$(ifconfig $1)
+  if [ $? -eq 0 ]; then 
+    read -r eth_ip<<<$(echo "$if_output" | awk '$1=="inet" { print $2  }')
+    #read -r eth_type<<<$(echo "$if_output" | awk '$1=="media:" { print $3  }')
+    #read -r eth_media<<<$(echo "$if_output" | awk '$1=="media:" { print $4 }' | sed s/\(//)
+
+    echo "$1: $eth_ip"
+  else
+    echo "$1: offline"
+  fi
+}
+
+output_usb_eth() {
+  if_output=$(ifconfig $1)
+  if [ $? -eq 0 ]; then 
+    read -r eth_ip<<<$(echo "$if_output" | awk '$1=="inet" { print $2  }')
+
+    echo "$1: $eth_ip"
+  else
+    echo "$1: offline"
+  fi
+}
+
+
+while true; do
+  hwstat_output=$(hwstat)
+  echo "$(output_usb_eth ue0) | $(output_wlan wlan0) | $(output_eth re0) | $(output_zfs) | $(output_ram) | $(output_swap) | $(output_temp) | $(output_battery) | $(output_time)";
+
+  sleep $interval;
+done

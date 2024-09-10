@@ -40,10 +40,11 @@ output_swap() {
 }
 
 output_ram() {
-  physmem=$(sysctl -n hw.physmem)
-  usermem=$(sysctl -n hw.usermem)
+  free_output=$(free -h)
+  read -r ram_all <<<$(echo "$free_output" | awk '$1=="mem_all:" { print $3  }')
+  read -r ram_used <<<$(echo "$free_output" | awk '$1=="mem_used:" { print $2  }')
 
-  echo "RAM: $(bytes_to_gb $usermem)/$(bytes_to_gb $physmem) GiB"
+  echo "RAM: $(bytes_to_gb $ram_used)/$(bytes_to_gb $ram_all) GiB"
 }
 
 output_zfs() {
@@ -52,8 +53,12 @@ output_zfs() {
 }
 
 output_eth() {
-  if_output=$(ifconfig $1)
-  if [ $? -eq 0 ]; then 
+  if_output=$(ifconfig $1 2> /dev/null)
+  if_ret=$?
+
+  read -r status <<<$(echo "$if_output" | awk '$1=="status:" { print $2,$3 }')
+
+  if [ "$if_ret" -eq 0 ] && [ "$status" != "no carrier" ]; then
     read -r eth_ip<<<$(echo "$if_output" | awk '$1=="inet" { print $2  }')
     #read -r eth_type<<<$(echo "$if_output" | awk '$1=="media:" { print $2  }')
     read -r eth_media<<<$(echo "$if_output" | awk '$1=="media:" { print $4 }' | sed s/\(//)
@@ -65,8 +70,12 @@ output_eth() {
 }
 
 output_wlan() {
-  if_output=$(ifconfig $1)
-  if [ $? -eq 0 ]; then 
+  if_output=$(ifconfig $1 2> /dev/null)
+  if_ret=$?
+
+  read -r status <<<$(echo "$if_output" | awk '$1=="status:" { print $2,$3 }')
+
+  if [ "$if_ret" -eq 0 ] && [ "$status" != "no carrier" ]; then 
     read -r eth_ip<<<$(echo "$if_output" | awk '$1=="inet" { print $2  }')
     #read -r eth_type<<<$(echo "$if_output" | awk '$1=="media:" { print $3  }')
     #read -r eth_media<<<$(echo "$if_output" | awk '$1=="media:" { print $4 }' | sed s/\(//)
@@ -78,8 +87,12 @@ output_wlan() {
 }
 
 output_usb_eth() {
-  if_output=$(ifconfig $1)
-  if [ $? -eq 0 ]; then 
+  if_output=$(ifconfig $1 2> /dev/null)
+  if_ret=$?
+
+  read -r status <<<$(echo "$if_output" | awk '$1=="status:" { print $2,$3 }')
+
+  if [ "$if_ret" -eq 0 ] && [ "$status" != "no carrier" ]; then 
     read -r eth_ip<<<$(echo "$if_output" | awk '$1=="inet" { print $2  }')
 
     echo "$1: $eth_ip"

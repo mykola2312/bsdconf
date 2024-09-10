@@ -22,4 +22,4 @@ linsysfs          /compat/debian/sys            linsysfs        rw,late         
 #/home/mykola      /export/mykola               nullfs          rw,late                     0 0
 
 # network
-192.168.100.4:/	/nfs		                        nfs	            nfsv4,rw                    0	0
+192.168.100.4:/	/nfs		                        nfs	            nfsv4,ro                    0	0

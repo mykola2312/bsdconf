@@ -28,6 +28,7 @@ files=(
   "/usr/local/etc/smb4.conf:smb4.conf"
   "/etc/sysctl.conf:sysctl.conf"
   "/usr/local/bin/w_status:w_status"
+  "$HOME/debian.sh:docker.sh"
 )
 
 # create directories

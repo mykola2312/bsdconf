@@ -1,0 +1,9 @@
+---
+- name: whoami test playbook
+  hosts: servers
+  tasks:
+    - name: run whoami
+      shell: whoami
+      register: whoami_output
+      become: true
+    - debug: msg="{{ whoami_output.stdout }}"

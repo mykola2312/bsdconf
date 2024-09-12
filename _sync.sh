@@ -11,6 +11,7 @@ mkdirs=(
 dirs=(
   "/var/unbound:."
   "$HOME/bhyve:."
+  "$HOME/ansible:."
   "$HOME/.config/i3:i3wm"
   "$HOME/.config/i3status:i3wm"
 )

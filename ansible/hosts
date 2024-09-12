@@ -1,0 +1,16 @@
+servers:
+  hosts:
+    srv-master:
+    srv-slave1:
+    srv-slave2:
+  vars:
+    ansible_connection: ssh
+    ansible_user: mykola
+    ansible_password: 12345678
+masters:
+  hosts:
+    srv-master:
+slaves:
+  hosts:
+    srv-slave1:
+    srv-slave2:

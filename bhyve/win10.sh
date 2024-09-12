@@ -1,13 +1,13 @@
 #!/bin/sh
 
-./enroll-tap.sh vnat0 tap0 &
+./enroll-tap.sh vnat0 tap4 &
 
 bhyve                                                     \
   -c 2                                                    \
   -s 0,hostbridge                                         \
   -s 3,ahci-hd,/var/lib/libvirt/images/win10.img          \
-  -s 10,virtio-net,tap0                                   \
-  -s 15,fbuf,rfb=127.0.0.1:5900,w=1280,h=720              \
+  -s 10,virtio-net,tap4                                   \
+  -s 15,fbuf,rfb=127.0.0.1:5969,w=1280,h=720              \
   -s 31,lpc                                               \
   -l com1,/dev/nmdm0A                                     \
   -l com2,/dev/nmdm1A                                     \

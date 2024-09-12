@@ -1,0 +1,16 @@
+---
+- name: remove useless packages for virtualized environment
+  hosts: servers
+  tasks:
+    - name: copy package list
+      copy:
+        src: fedora-bloat.txt
+        dest: /tmp/fedora-bloat.txt
+      register: copy_result
+    - name: dnf remove packages
+      shell: yes | dnf remove $(cat /tmp/fedora-bloat.txt)
+      when: copy_result is success
+      become: true
+      register: dnf_output
+    - debug: msg="{{ dnf_output.stdout }}"
+    - debug: msg="{{ dnf_output.stderr }}"

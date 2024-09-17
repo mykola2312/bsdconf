@@ -30,6 +30,7 @@ files=(
   "/etc/sysctl.conf:sysctl.conf"
   "/usr/local/bin/w_status:w_status"
   "$HOME/docker.sh:docker.sh"
+  "/usr/local/etc/X11/xinit/xinitrc.d/10-i3wm-kde-dark:X11/10-i3wm-kde-dark"
 )
 
 # create directories

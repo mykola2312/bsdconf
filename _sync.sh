@@ -32,6 +32,7 @@ files=(
   "/usr/local/bin/scap:scap"
   "$HOME/docker.sh:docker.sh"
   "/usr/local/etc/X11/xinit/xinitrc.d/10-i3wm-kde-dark:X11/10-i3wm-kde-dark"
+  "$HOME/Videos/ffmpeg.sh:ffmpeg.sh"
 )
 
 # create directories

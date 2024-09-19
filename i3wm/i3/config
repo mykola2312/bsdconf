@@ -11,8 +11,8 @@ exec --no-startup-id "feh --bg-fill --geometry 1366x768+0+0 $wallpaper"
 # start a terminal
 bindsym $mod+Return exec konsole
 
-# take screenshot with KDE's spectacle
-bindsym Print exec spectacle
+# call our own script for screenshotting
+bindsym Print exec scap
 
 # i3lock
 bindsym $win+l exec "i3lock --image $wallpaper --show-failed-attempts --show-keyboard-layout"

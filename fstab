@@ -19,7 +19,7 @@ linsysfs          /compat/debian/sys            linsysfs        rw,late         
 /home/mykola      /compat/debian/home/mykola    nullfs          rw,late                     0 0
 
 # exports
-#/home/mykola      /export/mykola               nullfs          rw,late                     0 0
+#/home/mykola      /export/mykola                nullfs          rw,late                     0 0
 
 # network
 192.168.100.4:/	/nfs		                        nfs	            nfsv4,ro                    0	0

@@ -29,6 +29,7 @@ files=(
   "/usr/local/etc/smb4.conf:smb4.conf"
   "/etc/sysctl.conf:sysctl.conf"
   "/usr/local/bin/w_status:w_status"
+  "/usr/local/bin/scap:scap"
   "$HOME/docker.sh:docker.sh"
   "/usr/local/etc/X11/xinit/xinitrc.d/10-i3wm-kde-dark:X11/10-i3wm-kde-dark"
 )

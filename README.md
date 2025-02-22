@@ -2,7 +2,7 @@
 
 Collections of my FreeBSD configurations files and personal notes
 
-Always check all the branches.
+Always check all the branches. asus-laptop has more stuff, but in active usage is sony-laptop.
 
 # sony-laptop
 

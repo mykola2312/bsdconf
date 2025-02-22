@@ -1,7 +1,0 @@
----
-- name: reboot
-  hosts: servers
-  tasks:
-    - name: reboot 'em all
-      shell: reboot
-      become: true

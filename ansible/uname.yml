@@ -1,8 +1,0 @@
----
-- name: uname test playbook
-  hosts: servers
-  tasks:
-    - name: run uname
-      shell: uname -a
-      register: uname_output
-    - debug: msg="{{ uname_output.stdout }}"

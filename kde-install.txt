@@ -1,1 +1,0 @@
-kde5 kde-baseapps kde-thumbnailer-chm kde-thumbnailer-epub kde-thumbnailer-fb2 kdeadmin kdegames kdegraphics kdemultimedia kdemultimedia-ffmpegthumbs kdenetwork kdenetwork-filesharing kdenlive kdeutils pam_kde plasma5-kde-cli-tools plasma5-kde-gtk-config wallpapers-freebsd-kde

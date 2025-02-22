@@ -1,0 +1,71 @@
+#!/bin/sh
+set -x
+
+ipfw -q -f flush
+cmd="ipfw -q"
+ks="keep-state"
+
+lan_ifs="table(lan_ifs)"
+$cmd table lan_ifs create type iface or-flush
+$cmd table lan_ifs add re0
+$cmd table lan_ifs add wlan0
+$cmd table lan_ifs add ue0
+
+broadcast="255.255.255.255"
+
+goonlan="table(goonlan)"
+$cmd table goonlan create type addr or-flush
+$cmd table goonlan add 192.168.100.0/24
+goonlan_bcast="192.168.100.255"
+
+vpn_ifs="table(vpn_ifs)"
+$cmd table vpn_ifs create type iface or-flush
+$cmd table vpn_ifs add tailscale0
+
+# Allow loopback
+$cmd add 00010 pass all from any to any via lo0
+# Allow anything on VPNs
+$cmd add 00011 pass all from any to any via $vpn_ifs
+
+# Stateful
+$cmd add 00015 check-state
+
+# LAN
+# Allow ANY ICMP
+$cmd add 00100 pass all from any to me proto icmp via $lan_ifs
+
+# Allow DHCP
+$cmd add 00102 pass udp from any to any 67 via $lan_ifs $ks
+$cmd add 00103 pass udp from any to any 68 via $lan_ifs $ks
+
+# Allow multicast
+$cmd add 00104 pass all from any to me proto igmp via $lan_ifs
+$cmd add 00105 pass all from $goonlan to 239.0.0.0/8 via $lan_ifs $ks
+$cmd add 00106 pass all from $goonlan to 224.0.0.0/4 via $lan_ifs $ks
+
+# Allow SSH
+$cmd add 00110 pass tcp from $goonlan to me 22 in via $lan_ifs $ks
+
+# Tailscale P2P port
+$cmd add 00111 pass udp from any to me 41641 via $lan_ifs $ks
+
+# Syncthing
+$cmd add 00112 pass tcp from $goonlan to me 22000 in via $lan_ifs $ks
+$cmd add 00113 pass tcp from $goonlan to me 21027 in via $lan_ifs $ks
+$cmd add 00114 pass udp from $goonlan to me 22000 in via $lan_ifs $ks
+# Syncthing discovery
+$cmd add 00115 pass udp from $goonlan to $broadcast 21027 via $lan_ifs $ks
+$cmd add 00116 pass udp from $goonlan to $goonlan_bcast 21027 via $lan_ifs $ks
+
+# Allow VNC
+$cmd add 00117 pass tcp from $goonlan to me 5900-5910 via $lan_ifs $ks
+
+# Allow iperf
+$cmd add 00118 pass tcp from any to me 5201 via $lan_ifs $ks
+$cmd add 00119 pass udp from any to me 5201 via $lan_ifs $ks
+
+# Allow egress
+$cmd add 00199 pass all from any to any out via $lan_ifs $ks
+
+# Default deny rule
+$cmd add 65000 deny log all from any to any

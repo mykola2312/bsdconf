@@ -4,8 +4,8 @@ mkdirs=(
 )
 
 dirs=(
-  "/usr/local/etc/X11:X11"
-  "$HOME/xrandr:xrandr"
+  "/usr/local/etc/X11:."
+  "$HOME/xrandr:."
 )
 
 files=(
